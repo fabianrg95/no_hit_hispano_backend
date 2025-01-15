@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: nohit.hispano.backend
+  datasource:
+    url: ###
+    username: ###
+    password: ###
+    driver-class-name: ###
+
