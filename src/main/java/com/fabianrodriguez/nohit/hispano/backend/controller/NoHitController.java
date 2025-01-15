@@ -1,6 +1,6 @@
 package com.fabianrodriguez.nohit.hispano.backend.controller;
 
-import com.fabianrodriguez.nohit.hispano.backend.services.ContinenteService;
+import com.fabianrodriguez.nohit.hispano.backend.services.defs.IContinenteService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class NoHitController {
 
-    private final ContinenteService continenteService;
+	private final IContinenteService continenteService;
 
-    @GetMapping("/continentes")
-    private void obtenerContinentes() {
-        continenteService.obtenerContinentes();
-    }
+	@GetMapping("/continentes")
+	public void obtenerContinentes() {
+		continenteService.obtenerContinentes();
+	}
 }
