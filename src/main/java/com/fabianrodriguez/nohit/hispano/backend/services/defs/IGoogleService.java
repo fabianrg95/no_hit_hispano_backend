@@ -1,10 +1,9 @@
 package com.fabianrodriguez.nohit.hispano.backend.services.defs;
 
-import com.google.api.services.sheets.v4.Sheets;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.List;
 
 public interface IGoogleService {
-	void leerExcel() throws GeneralSecurityException, IOException;
+	List<List<Object>> leerExcel() throws GeneralSecurityException, IOException;
 }

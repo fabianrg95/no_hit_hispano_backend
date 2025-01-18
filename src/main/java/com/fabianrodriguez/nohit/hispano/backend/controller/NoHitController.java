@@ -1,6 +1,10 @@
 package com.fabianrodriguez.nohit.hispano.backend.controller;
 
-import com.fabianrodriguez.nohit.hispano.backend.services.defs.IContinenteService;
+import com.fabianrodriguez.nohit.hispano.backend.dto.excel.InformacionPartidaExcelDto;
+import com.fabianrodriguez.nohit.hispano.backend.services.defs.IDatosPartidaService;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class NoHitController {
 
-	private final IContinenteService continenteService;
+	private final IDatosPartidaService datosPartidasService;
 
-	@GetMapping("/continentes")
-	public void obtenerContinentes() {
-		continenteService.obtenerContinentes();
+	@GetMapping("/obtener-datos-excel")
+	public List<InformacionPartidaExcelDto> obtenerDatosExcel() throws GeneralSecurityException, IOException {
+		return datosPartidasService.obtenerDatosExcel();
 	}
 }
