@@ -41,19 +41,7 @@ public class GoogleService implements IGoogleService {
 	}
 
 	@Override
-	public List<List<Object>> leerExcel() throws GeneralSecurityException, IOException {
-		Sheets service = obtenerExcel();
-		ValueRange response = service.spreadsheets().values()
-				.get(SPREADSHEET_ID, "")
-				.execute();
-
-//		List<List<Object>> values = response.getValues();
-//		if (values == null || values.isEmpty()) {
-//			System.out.println("No se encontraron datos.");
-//		} else {
-//			for (List<Object> row : values) {
-//				System.out.println(row); // Imprime cada fila de la hoja de cálculo
-//			}
-//		}
+	public List<List<Object>> leerExcel(final String pagina) throws GeneralSecurityException, IOException {
+		return obtenerExcel().spreadsheets().values().get(SPREADSHEET_ID, pagina).execute().getValues();
 	}
 }

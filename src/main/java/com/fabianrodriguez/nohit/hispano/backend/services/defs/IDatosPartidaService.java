@@ -4,5 +4,5 @@ import com.fabianrodriguez.nohit.hispano.backend.dto.excel.InformacionPartidaExc
 import java.util.List;
 
 public interface IDatosPartidaService {
-	List<InformacionPartidaExcelDto> obtenerDatosExcel();
+	List<InformacionPartidaExcelDto> obtenerDatosExcel(final String hoja);
 }
