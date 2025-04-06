@@ -17,6 +17,6 @@ class Partida:
 
     def __repr__(self):
         return (f"Partida(fecha={self.fecha}, juego={self.juego}, run={self.run}, runner={self.runner}, "
-                f"run_youtube={self.run_youtube}, run_twitch={self.run_twitch}, pronombre={self.pronombre}, "
+                f"run_youtube=<{self.run_youtube}>, run_twitch=<{self.run_twitch}>, pronombre={self.pronombre}, "
                 f"fecha_nacimiento={self.año_de_nacimiento}, nacionalidad={self.nacionalidad}, "
                 f", personal_1st={self.personal_1st}, , hispano_1st={self.hispano_1st}, , world_1st={self.world_1st})")

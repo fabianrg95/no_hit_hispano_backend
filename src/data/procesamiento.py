@@ -17,21 +17,27 @@ def process_data():
         validar_registro_correcto(partida, partida_dto)
 
 def validar_registro_correcto(partida, partida_dto):
-    registro_con_error = False
-    if partida_dto.id_runner == 0:
-        print("No se encontro el jugador con nombre " + partida.runner)
-        registro_con_error = True
-    if partida_dto.id_juego == 0:
-        print("No se encontro el juego con nombre " + partida.juego)
-        registro_con_error = True
+    mensaje_fecha = None
+    mensaje_runner = None
+    mensaje_juego = None
 
+    registro_con_error = False
     fecha_partida = utilidades.obtener_fecha_partida_normalizada(partida_dto)
 
     if fecha_partida is None or fecha_partida > datetime.now():
-        print("existe un error con la fecha de la partida " + partida_dto.fecha)
+        mensaje_fecha = {"name": "• Fecha", "value": "La fecha de la run '"+partida.fecha+"' posee un error."}
+        registro_con_error = True
+
+    if partida_dto.id_juego == 0:
+        mensaje_runner = {"name": "• Juego", "value": "El juego '"+partida.juego+"' de la run  no se encuentra en la base."}
+        registro_con_error = True
+
+    if partida_dto.id_runner == 0:
+        mensaje_juego = {"name": "• Runner", "value": "El runner '"+partida.runner+"' no se encuentra en la base."}
+        registro_con_error = True
 
     if registro_con_error:
-        print(partida_dto)
+        utilidades.notificar_error_discord(utilidades.construir_mensaje_error(partida.__repr__(), [mensaje_fecha, mensaje_juego, mensaje_runner]))
 
 
 
