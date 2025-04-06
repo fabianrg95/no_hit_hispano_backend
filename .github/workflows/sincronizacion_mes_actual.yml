@@ -26,9 +26,10 @@ jobs:
       - name: Añadir src al PYTHONPATH
         run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)/src" >> $GITHUB_ENV
 
-      - name: Crear archivo de credenciales de Google
+      - name: Crear carpeta config y archivo de credenciales
         run: |
-          echo "${{ secrets.GOOGLE_API_JSON }}" > config/credentials.json
+          mkdir -p config
+          echo "${{ secrets.GOOGLE_API_JSON }}" | base64 --decode > config/credentials.json
         
       - name: Ejecutar script principal
         env:
