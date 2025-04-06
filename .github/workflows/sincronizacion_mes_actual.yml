@@ -38,3 +38,12 @@ jobs:
           GOOGLE_KEY: ${{ secrets.GOOGLE_KEY }}
         run: |
           python src/main.py
+
+      - name: Notificar a Discord
+        if: always()
+        run: |
+          STATUS="${{ job.status }}"
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d "{\"content\": \"🚀 *Workflow terminado en estado:* **${STATUS}** en \`${{ github.ref_name }}\` por \`${{ github.actor }}\`\"}" \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
