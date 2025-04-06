@@ -1,6 +1,7 @@
 class Partida:
 
-    def __init__(self, fecha, juego, run, runner, run_youtube, clip_twitch, pronombre, año_de_nacimiento, nacionalidad, personal_1st, hispano_1st,world_1st, **kwargs):
+    def __init__(self, fecha, juego, run, runner, run_youtube, clip_twitch, pronombre, año_de_nacimiento, nacionalidad,
+                 personal_1st, hispano_1st,world_1st, **kwargs):
         self.fecha = fecha
         self.juego = juego
         self.run = run

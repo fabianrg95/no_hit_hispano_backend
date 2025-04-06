@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from src.models.dto.partida_dto import PartidaDTO
+from src.utils import utilidades
 from src.utils.data_store import DataStore
 import re
 import unicodedata
@@ -9,21 +12,45 @@ data_store = DataStore()
 def process_data():
 
     for partida in data_store.obtener_partidas_a_procesar():
-        nombre_juego_normalizado = limpiar_texto_sin_tildes(partida.juego)
-        partida_dto = PartidaDTO()
-        partida_dto.update(fecha = partida.fecha)
-        partida_dto.update(id_juego = obtener_juego(nombre_juego_normalizado))
-        partida_dto.update(id_runner = obtener_jugador(partida.runner))
-        partida_dto.update(video_clips = unificar_links_videos(partida))
-        partida_dto.update(primera_personal = partida.personal_1st)
-        partida_dto.update(primera_hispano = partida.hispano_1st)
-        partida_dto.update(primera_mundial = partida.world_1st)
+        partida_dto = mapear_informacion_partida(partida)
 
-        if partida_dto.id_runner == 0:
-            print("No se encontro el jugador con nombre "+ partida.runner)
-            print(partida_dto)
+        validar_registro_correcto(partida, partida_dto)
 
+def validar_registro_correcto(partida, partida_dto):
+    registro_con_error = False
+    if partida_dto.id_runner == 0:
+        print("No se encontro el jugador con nombre " + partida.runner)
+        registro_con_error = True
+    if partida_dto.id_juego == 0:
+        print("No se encontro el juego con nombre " + partida.juego)
+        registro_con_error = True
+
+    fecha_partida = utilidades.obtener_fecha_partida_normalizada(partida_dto)
+
+    if fecha_partida is None or fecha_partida > datetime.now():
+        print("existe un error con la fecha de la partida " + partida_dto.fecha)
+
+    if registro_con_error:
         print(partida_dto)
+
+
+
+
+
+def mapear_informacion_partida(partida):
+    nombre_juego_normalizado = limpiar_texto_sin_tildes(partida.juego)
+    partida_dto = PartidaDTO()
+    partida_dto.update(fecha=partida.fecha)
+    partida_dto.update(id_juego=obtener_juego(nombre_juego_normalizado))
+    partida_dto.update(id_runner=obtener_jugador(partida.runner))
+    partida_dto.update(video_clips=unificar_links_videos(partida))
+    partida_dto.update(primera_personal=partida.personal_1st)
+    partida_dto.update(primera_hispano=partida.hispano_1st)
+    partida_dto.update(primera_mundial=partida.world_1st)
+    partida_dto.update(pronombre=partida.pronombre)
+    partida_dto.update(año_de_nacimiento=partida.año_de_nacimiento)
+    partida_dto.update(nacionalidad=partida.nacionalidad)
+    return partida_dto
 
 
 def obtener_juego(nombre_juego_normalizado):
