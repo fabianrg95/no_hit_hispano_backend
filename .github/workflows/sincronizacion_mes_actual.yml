@@ -3,6 +3,7 @@ name: Ejecutar programa Python
 on:
   schedule:
     - cron: '*/5 * * * *'
+  workflow_dispatch:
 
 jobs:
   run-script:
