@@ -1,8 +1,9 @@
 class PartidaDTO:
-    def __init__(self, fecha=None, id_juego=None, id_runner=None, video_clips=None, primera_personal=False,
-                 primera_hispano=False, primera_mundial=False, pronombre=None, año_de_nacimiento=None, nacionalidad=None):
+    def __init__(self, fecha=None, id_juego=None, nombre_partida = None, id_runner=None, video_clips=None, primera_personal:bool=False,
+                 primera_hispano:bool=False, primera_mundial:bool=False, pronombre=None, año_de_nacimiento=None, nacionalidad=None):
         self.fecha = fecha
         self.id_juego = id_juego
+        self.nombre_partida = nombre_partida
         self.id_runner = id_runner
         self.video_clips = video_clips
         self.primera_personal = primera_personal

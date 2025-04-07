@@ -1,6 +1,9 @@
 from datetime import datetime
 
+from src.data import supabase
 from src.models.dto.partida_dto import PartidaDTO
+from src.models.excel.partida import Partida
+from src.models.supabase.run import Run
 from src.utils import utilidades
 from src.utils.data_store import DataStore
 import re
@@ -8,21 +11,26 @@ import unicodedata
 
 data_store = DataStore()
 
-
 def process_data():
 
     for partida in data_store.obtener_partidas_a_procesar():
-        partida_dto = mapear_informacion_partida(partida)
+        partida_dto = mapear_informacion_partida_para_validacion(partida)
 
-        validar_registro_correcto(partida, partida_dto)
+        if validar_registro_correcto(partida, partida_dto) is False:
+            guardar_partida_database(partida_dto, partida)
 
-def validar_registro_correcto(partida, partida_dto):
+def guardar_partida_database(partida_dto: PartidaDTO, partida_excel: Partida):
+    run: Run = mapear_partida_database(partida_dto)
+    if supabase.registrar_partida(run) is True:
+        utilidades.notificar_exito_discord(utilidades.construir_mensaje_exito(partida_excel))
+
+def validar_registro_correcto(partida, partida_dto)-> bool:
     mensaje_fecha = None
     mensaje_runner = None
     mensaje_juego = None
 
     registro_con_error = False
-    fecha_partida = utilidades.obtener_fecha_partida_normalizada(partida_dto)
+    fecha_partida = utilidades.obtener_fecha_partida_normalizada(partida_dto.fecha)
 
     if fecha_partida is None or fecha_partida > datetime.now():
         mensaje_fecha = {"name": "• Fecha", "value": "La fecha de la run '"+partida.fecha+"' posee un error."}
@@ -39,15 +47,14 @@ def validar_registro_correcto(partida, partida_dto):
     if registro_con_error:
         utilidades.notificar_error_discord(utilidades.construir_mensaje_error(partida.__repr__(), [mensaje_fecha, mensaje_juego, mensaje_runner]))
 
+    return registro_con_error
 
-
-
-
-def mapear_informacion_partida(partida):
+def mapear_informacion_partida_para_validacion(partida):
     nombre_juego_normalizado = limpiar_texto_sin_tildes(partida.juego)
     partida_dto = PartidaDTO()
     partida_dto.update(fecha=partida.fecha)
     partida_dto.update(id_juego=obtener_juego(nombre_juego_normalizado))
+    partida_dto.update(nombre_partida=partida.run)
     partida_dto.update(id_runner=obtener_jugador(partida.runner))
     partida_dto.update(video_clips=unificar_links_videos(partida))
     partida_dto.update(primera_personal=partida.personal_1st)
@@ -58,6 +65,15 @@ def mapear_informacion_partida(partida):
     partida_dto.update(nacionalidad=partida.nacionalidad)
     return partida_dto
 
+def mapear_partida_database(partida_dto: PartidaDTO) -> Run:
+    return Run(fecha_partida=utilidades.obtener_fecha_partida_normalizada(partida_dto.fecha).strftime("%Y-%m-%d"),
+              juego_id=partida_dto.id_juego,
+              nombre_partida=partida_dto.nombre_partida,
+              jugador_id=partida_dto.id_runner,
+              primera_partida_personal=partida_dto.primera_personal,
+              primera_partida_hispano=partida_dto.primera_hispano,
+              primera_partida_mundial=partida_dto.primera_mundial,
+              videos_clips=partida_dto.video_clips)
 
 def obtener_juego(nombre_juego_normalizado):
     juegos = data_store.obtener_juegos()
