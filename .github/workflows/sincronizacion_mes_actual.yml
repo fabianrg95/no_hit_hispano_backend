@@ -48,4 +48,4 @@ jobs:
           curl -H "Content-Type: application/json" \
             -X POST \
             -d "{\"content\": \"🚀 *Workflow terminado en estado:* **${STATUS}** en \`${{ github.ref_name }}\` por \`${{ github.actor }}\`\"}" \
-            ${{ secrets.DISCORD_WEBHOOK_URL }}
+            ${{ secrets.WEBHOOK_NOTIFICACIONES_ERRORES }}
