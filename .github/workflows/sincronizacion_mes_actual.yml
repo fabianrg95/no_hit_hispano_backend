@@ -36,6 +36,8 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           GOOGLE_KEY: ${{ secrets.GOOGLE_KEY }}
+          WEBHOOK_NOTIFICACIONES_ERRORES: ${{ secrets.WEBHOOK_NOTIFICACIONES_ERRORES }}
+          WEBHOOK_NOTIFICACIONES_EXITOSAS: ${{ secrets.WEBHOOK_NOTIFICACIONES_EXITOSAS }}
         run: |
           python src/main.py
 
@@ -46,4 +48,4 @@ jobs:
           curl -H "Content-Type: application/json" \
             -X POST \
             -d "{\"content\": \"🚀 *Workflow terminado en estado:* **${STATUS}** en \`${{ github.ref_name }}\` por \`${{ github.actor }}\`\"}" \
-            ${{ secrets.DISCORD_WEBHOOK_URL }}
+            ${{ secrets.WEBHOOK_NOTIFICACIONES_ERRORES }}
