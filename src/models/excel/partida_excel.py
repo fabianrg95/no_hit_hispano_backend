@@ -1,4 +1,4 @@
-class Partida:
+class PartidaExcel:
 
     def __init__(self, fecha, juego, run, runner, run_youtube, clip_twitch, pronombre, año_de_nacimiento, nacionalidad,
                  personal_1st:bool, hispano_1st:bool,world_1st:bool, **kwargs):

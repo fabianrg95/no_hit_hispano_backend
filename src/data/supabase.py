@@ -1,33 +1,24 @@
-from dataclasses import asdict
-
 from postgrest import APIError
 from supabase import create_client, Client
+from src.models.supabase.run import Run
 import os
 
-from src.models.supabase.run import Run
 
 # Inicializar conexión con Supabase una sola vez
 url = os.getenv("SUPABASE_URL")
 key = os.getenv("SUPABASE_KEY")
 supabase: Client = create_client(url, key)
 
-"""def insert_data_to_supabase(df):
-    url = os.getenv("SUPABASE_URL")
-    key = os.getenv("SUPABASE_KEY")
-    supabase = create_client(url, key)
-    data = df.to_dict(orient="records")
-    response = supabase.table("tu_tabla").insert(data).execute()
-    return response"""
 
+def obtener_informacion_tabla(entidad):
 
-def get_data(model_class):
+    response = (supabase.table(entidad.TABLE_NAME).select("*").order("id").execute())
 
-    response = (supabase.table(model_class.TABLE_NAME).select("*").order("id").execute())
-
-    return [model_class(**item) for item in response.data]
+    return [entidad(**item) for item in response.data]
 
 
 def registrar_partida(partida: Run):
+    ##se elimina la propiedad id del diccionario de datos para que la base de datos la cree automaticamente
     del partida.__dict__['id']
     try:
         response = (
@@ -43,5 +34,3 @@ def registrar_partida(partida: Run):
             return False
         else:
             raise e
-
-    return response

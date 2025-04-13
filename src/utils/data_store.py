@@ -4,10 +4,6 @@ class DataStore:
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(DataStore, cls).__new__(cls)
-            cls._instance.meses_es = [
-                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-            ]
             cls._instance.continentes = []
             cls._instance.juegos = []
             cls._instance.jugadores = []
@@ -51,6 +47,3 @@ class DataStore:
 
     def obtener_partidas_a_procesar(self):
         return self.partidas_procesar
-
-    def obtener_meses_es(self):
-        return self.meses_es
