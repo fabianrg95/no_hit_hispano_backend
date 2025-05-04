@@ -10,6 +10,8 @@ class DataStore:
             cls._instance.nacionalidades = []
             cls._instance.pronombres = []
             cls._instance.partidas_procesar = []
+            cls._instance.notificaciones_exitos = []
+            cls._instance.notificaciones_fallos = []
         return cls._instance
 
     def cargar_continentes(self, continentes):
@@ -30,6 +32,12 @@ class DataStore:
     def cargar_partidas_a_procesar(self, partidas):
         self.partidas_procesar = partidas
 
+    def cargar_notificacion_exitos(self, notificacion):
+        self.notificaciones_exitos.append(notificacion)
+
+    def cargar_notificacion_fallos(self, notificacion):
+        self.notificaciones_fallos.append(notificacion)
+
     def obtener_continentes(self):
         return self.continentes
 
@@ -47,3 +55,9 @@ class DataStore:
 
     def obtener_partidas_a_procesar(self):
         return self.partidas_procesar
+
+    def obtener_notificaciones_exitos(self):
+        return self.notificaciones_exitos
+
+    def obtener_notificaciones_fallos(self):
+        return self.notificaciones_fallos

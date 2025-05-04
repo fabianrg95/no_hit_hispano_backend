@@ -1,16 +1,37 @@
 import os
+import time
+
 import requests
 from src.models.enums.mensaje_notificacion_discord import MensajeNotificacion
 from src.models.excel.partida_excel import PartidaExcel
+from src.utils.data_store import DataStore
 
+data_store = DataStore()
 
-def notificar_error_discord(mensaje: str):
-    print("Notificando sobre un error en la sincronizacion de una partida por discord.")
-    __notificar_discord(mensaje, "WEBHOOK_NOTIFICACIONES_ERRORES")
+def notificar_error_discord():
+    fallos = data_store.obtener_notificaciones_fallos()
+    if len(fallos) > 0:
+        print("Iniciando las notificaciones de errores....")
+        for notificacion in fallos:
+            print("Notificando sobre un error en la sincronizacion de una partida por discord.")
+            __notificar_discord(notificacion, "WEBHOOK_NOTIFICACIONES_ERRORES")
+            time.sleep(2)
+        print("Finalizando las notificaciones de errores....")
+    else:
+        print("No se detectaron fallos para notificar")
 
-def notificar_exito_discord(mensaje):
-    print("Notificando exito en la sincronizacion de una partida por discord.")
-    __notificar_discord(mensaje, "WEBHOOK_NOTIFICACIONES_EXITOSAS")
+def notificar_exito_discord():
+    exitos = data_store.obtener_notificaciones_exitos()
+    if len(exitos) > 0:
+        print("Iniciando las notificaciones de registros exitosos....")
+        for notificacion in data_store.obtener_notificaciones_exitos():
+            print("Notificando exito en la sincronizacion de una partida por discord.")
+            __notificar_discord(notificacion, "WEBHOOK_NOTIFICACIONES_EXITOSAS")
+            time.sleep(2)
+        print("Finalizando las notificaciones de registros exitosos....")
+    else:
+        print("No se detectaron exitos para notificar")
+
 
 def __notificar_discord(mensaje: str, webhook: str):
     webhook_url = os.getenv(webhook)

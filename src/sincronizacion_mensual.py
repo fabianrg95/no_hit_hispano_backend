@@ -2,6 +2,7 @@ from datetime import datetime
 
 from data.google import obtener_informacion_excel_por_hoja
 from src.models.excel.partida_excel import PartidaExcel
+from src.notificador.notificador import notificar_error_discord, notificar_exito_discord
 from src.services.procesamiento import procesar_registro_partida
 from src.data.supabase import obtener_informacion_tabla
 from src.models.supabase.juego import Juego
@@ -17,6 +18,8 @@ def main():
     cargar_informacion_base_memoria(data_store)
     datos_excel = obtener_informacion_excel()
     procesar_registro_partida(datos_excel)
+    notificar_error_discord()
+    notificar_exito_discord()
 
 
 def cargar_informacion_base_memoria(data_store):
