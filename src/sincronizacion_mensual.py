@@ -41,12 +41,17 @@ Realizando el cargue inicial de informacion con base en excel y base de datos
     ##print("Cargando los pronombres en memoria")
     ##data_store.cargar_pronombres(get_data(Pronombre))
 
-def obtener_informacion_excel()-> [PartidaExcel]:
-    mes_actual = meses_es[datetime.now().month - 1]
-    print("Obteniendo del ("+mes_actual+") desde el excel.")
+def obtener_informacion_excel() -> [PartidaExcel]:
+    mes_actual_idx = datetime.now().month - 1
+    mes_actual = meses_es[mes_actual_idx]
+    mes_anterior = meses_es[(mes_actual_idx - 1) % 12]
 
-    return obtener_informacion_excel_por_hoja(mes_actual)
+    print(f"Obteniendo informacion de ({mes_actual}) y ({mes_anterior}) desde el excel.")
 
+    datos_actual = obtener_informacion_excel_por_hoja(mes_actual)
+    datos_anterior = obtener_informacion_excel_por_hoja(mes_anterior)
+
+    return datos_anterior + datos_actual
 
 if __name__ == "__main__":
     main()
