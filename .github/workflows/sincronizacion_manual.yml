@@ -23,4 +23,4 @@ jobs:
         run: pip install -r requirements.txt
       
       - name: Run sync with sheet
-        run: python src/sincronizacion_mensual.py "${{ github.event.inputs.hoja }}"
+        run: python src/sincronizacion_mensual.py ${{ github.event.inputs.hoja }}
