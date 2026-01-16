@@ -9,18 +9,45 @@ on:
         type: string
 
 jobs:
-  sync:
+  run-script:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Set up Python
+      - name: Checkout del código
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
-      
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-      
-      - name: Run sync with sheet
-        run: python src/sincronizacion_mensual.py ${{ github.event.inputs.hoja }}
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Añadir src al PYTHONPATH
+        run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)/src" >> $GITHUB_ENV
+
+      - name: Crear carpeta config y archivo de credenciales
+        run: |
+          mkdir -p config
+          echo "${{ secrets.GOOGLE_API_JSON }}" | base64 --decode > config/credentials.json
+
+      - name: Ejecutar script principal
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          GOOGLE_KEY: ${{ secrets.GOOGLE_KEY }}
+          WEBHOOK_NOTIFICACIONES_ERRORES: ${{ secrets.WEBHOOK_NOTIFICACIONES_ERRORES }}
+          WEBHOOK_NOTIFICACIONES_EXITOSAS: ${{ secrets.WEBHOOK_NOTIFICACIONES_EXITOSAS }}
+        run: |
+          python src/sincronizacion_mensual.py ${{ github.event.inputs.hoja }}
+
+      - name: Notificar a Discord
+        if: always()
+        run: |
+          STATUS="${{ job.status }}"
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d "{\"content\": \"🚀 *Workflow terminado ejecucion manual de la hoja ${{ github.event.inputs.hoja }} en estado:* **${STATUS}** en \`${{ github.ref_name }}\` por \`${{ github.actor }}\`\"}" \
+            ${{ secrets.WEBHOOK_NOTIFICACIONES_ERRORES }}
