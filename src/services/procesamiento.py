@@ -11,7 +11,8 @@ data_store = DataStore()
 
 def procesar_registro_partida(datos_excel : [PartidaExcel]):
 
-    for partida in datos_excel:
+    for index, partida in enumerate(datos_excel):
+        print(f"Procesando item #{index + 1} de {len(datos_excel)}: {partida.fecha}")
         partida_dto = partida_excel_a_partida_dto(partida)
 
         errores = validar_registro_correcto(partida, partida_dto)

@@ -1,0 +1,26 @@
+name: Sincronización Manual
+
+on:
+  workflow_dispatch:
+    inputs:
+      hoja:
+        description: 'Hoja a sincronizar (ej: Enero)'
+        required: false
+        type: string
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      
+      - name: Run sync with sheet
+        run: python src/sincronizacion_mensual.py "${{ github.event.inputs.hoja }}"

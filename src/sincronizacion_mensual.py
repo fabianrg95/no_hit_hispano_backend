@@ -1,3 +1,4 @@
+import sys
 from datetime import datetime
 
 from data.google import obtener_informacion_excel_por_hoja
@@ -11,12 +12,12 @@ from src.utils.data_store import DataStore
 from src.utils.constantes import meses_es
 
 
-def main():
+def main(hoja=None):
     print("Inicializando memoria")
     data_store = DataStore()
 
     cargar_informacion_base_memoria(data_store)
-    datos_excel = obtener_informacion_excel()
+    datos_excel = obtener_informacion_excel(hoja)
     procesar_registro_partida(datos_excel)
     notificar_error_discord()
     notificar_exito_discord()
@@ -41,17 +42,23 @@ Realizando el cargue inicial de informacion con base en excel y base de datos
     ##print("Cargando los pronombres en memoria")
     ##data_store.cargar_pronombres(get_data(Pronombre))
 
-def obtener_informacion_excel() -> [PartidaExcel]:
-    mes_actual_idx = datetime.now().month - 1
-    mes_actual = meses_es[mes_actual_idx]
-    mes_anterior = meses_es[(mes_actual_idx - 1) % 12]
+def obtener_informacion_excel(hoja=None) -> [PartidaExcel]:
+    if hoja is None:
+        mes_actual_idx = datetime.now().month - 1
+        mes_actual = meses_es[mes_actual_idx]
+        mes_anterior = meses_es[(mes_actual_idx - 1) % 12]
 
-    print(f"Obteniendo informacion de ({mes_actual}) y ({mes_anterior}) desde el excel.")
+        print(f"Obteniendo informacion de ({mes_actual}) y ({mes_anterior}) desde el excel.")
 
-    datos_actual = obtener_informacion_excel_por_hoja(mes_actual)
-    datos_anterior = obtener_informacion_excel_por_hoja(mes_anterior)
+        datos_actual = obtener_informacion_excel_por_hoja(mes_actual)
+        datos_anterior = obtener_informacion_excel_por_hoja(mes_anterior)
+        datos_procesar = datos_anterior + datos_actual
+    else:
+        print(f"Obteniendo informacion de la hoja ({hoja}) desde el excel.")
+        datos_procesar = obtener_informacion_excel_por_hoja(hoja)
 
-    return datos_anterior + datos_actual
+    return datos_procesar
 
 if __name__ == "__main__":
-    main()
+    hoja = sys.argv[1] if len(sys.argv) > 1 else None
+    main(hoja)
