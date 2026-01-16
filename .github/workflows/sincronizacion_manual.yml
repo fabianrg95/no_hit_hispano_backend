@@ -41,7 +41,7 @@ jobs:
           WEBHOOK_NOTIFICACIONES_ERRORES: ${{ secrets.WEBHOOK_NOTIFICACIONES_ERRORES }}
           WEBHOOK_NOTIFICACIONES_EXITOSAS: ${{ secrets.WEBHOOK_NOTIFICACIONES_EXITOSAS }}
         run: |
-          python src/sincronizacion_mensual.py ${{ github.event.inputs.hoja }}
+          python src/sincronizacion_mensual.py "${{ github.event.inputs.hoja }}"
 
       - name: Notificar a Discord
         if: always()
