@@ -54,8 +54,11 @@ def obtener_informacion_excel(hoja=None) -> [PartidaExcel]:
         datos_anterior = obtener_informacion_excel_por_hoja(mes_anterior + " 2026")
         datos_procesar = datos_anterior + datos_actual
     else:
-        print(f"Obteniendo informacion de la hoja ({hoja}) desde el excel.")
-        datos_procesar = obtener_informacion_excel_por_hoja(hoja)
+        hojas = [h.strip() for h in hoja.split(",")]
+        print(f"Obteniendo informacion de las hojas ({', '.join(hojas)}) desde el excel.")
+        datos_procesar = []
+        for h in hojas:
+            datos_procesar.extend(obtener_informacion_excel_por_hoja(h))
 
     return datos_procesar
 
