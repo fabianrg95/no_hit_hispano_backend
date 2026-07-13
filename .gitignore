@@ -173,3 +173,7 @@ cython_debug/
 .pypirc
 
 .idea/
+
+config/credentials.json
+
+.env
