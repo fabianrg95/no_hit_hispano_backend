@@ -11,7 +11,23 @@ def normalizar_fecha_partida(fecha) -> datetime | None:
         try:
             return datetime.strptime(fecha, formato)
         except ValueError:
+            # Intenta formatear fechas separadas solo por espacios (ej: "11 6 2026")
+            try:
+                partes = fecha.split()
+                if len(partes) == 3:
+                    dia, mes, anio = partes
+                    fecha_formateada = f"{dia}/{mes}/{anio}"
+                    for formato in formatos_fecha:
+                        try:
+                            return datetime.strptime(fecha_formateada, formato)
+                        except ValueError:
+                            continue
+            except (AttributeError, ValueError):
+                pass
+
             continue
+    
+
 
 def normalizar_texto(texto: str) -> str:
     # 1. Normaliza el texto (NFD separa letras y tildes)
